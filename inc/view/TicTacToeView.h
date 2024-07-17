@@ -2,7 +2,7 @@
 #define TICTACTOEVIEW_H
 
 #include <iostream>
-#include "model/TicTacToeModel.h"
+#include "../../m/TicTacToeModel.h"
 
 class TicTacToeView {
 public:

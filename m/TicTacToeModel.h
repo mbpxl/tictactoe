@@ -12,9 +12,10 @@ const char PLAYER_O = 'o';
 class TicTacToeModel {
 public:
     TicTacToeModel();
-    bool checkSmallBoardWin(const std::vector<std::vector<char>>& board, char player);
+    bool checkBoardWin(const std::vector<std::vector<char>>& board, char player);
     bool checkMainBoardWin(char player);
     void makeMove(int mainRow, int mainCol, int row, int col, char player);
+    bool isValidMove(int mainRow, int mainCol, int row, int col) const; // dobavil!
     std::vector<std::vector<std::vector<std::vector<char>>>> getMainBoard() const;
     std::vector<std::vector<char>> getMainBoardWinners() const;
 

@@ -1,4 +1,4 @@
-#include "model/TicTacToeModel.h"
+#include "../m/TicTacToeModel.h"
 #include "view/TicTacToeView.h"
 
 int main() {
@@ -26,7 +26,7 @@ int main() {
             int row, col;
             view.promptMove(currentPlayer);
             std::cin >> row >> col;
-            if (row < 0 || row >= 3 || col < 0 || col >= 3 || model.getMainBoard()[mainRow][mainCol][row][col] != EMPTY) {
+            if (!model.isValidMove(mainRow, mainCol, row, col)) {
                 view.showError();
                 continue;
             }
@@ -37,7 +37,7 @@ int main() {
             do {
                 row = std::rand() % 3;
                 col = std::rand() % 3;
-            } while (model.getMainBoard()[mainRow][mainCol][row][col] != EMPTY);
+            } while (!model.isValidMove(mainRow, mainCol, row, col));
             model.makeMove(mainRow, mainCol, row, col, currentPlayer);
         }
 

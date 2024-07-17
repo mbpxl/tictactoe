@@ -1,36 +1,53 @@
-# Имя компилятора
 CXX = g++
+CXXFLAGS = -std=c++11 -Wall -g -Iinc -Im
 
-# Флаги компиляции
-CXXFLAGS = -std=c++11 -Wall -Iinc
-
-# Папка с исходными файлами и заголовочными файлами
+BUILD_DIR = build
 SRC_DIR = src
 INC_DIR = inc
+TEST_DIR = test
 
-# Имя исполняемого файла
-TARGET = TicTacToe
+MODEL_SRC = $(SRC_DIR)/TicTacToeModel.cpp
+VIEW_SRC = $(SRC_DIR)/TicTacToeView.cpp
+MAIN_SRC = $(SRC_DIR)/main.cpp
 
-# Исходные файлы
-SRCS = $(SRC_DIR)/main.cpp $(SRC_DIR)/TicTacToeModel.cpp $(SRC_DIR)/TicTacToeView.cpp
+MODEL_TEST_SRC = $(TEST_DIR)/TestTicTacToeModel.cpp
+VIEW_TEST_SRC = $(TEST_DIR)/TestTicTacToeView.cpp
 
-# Объектные файлы
-OBJS = $(SRCS:.cpp=.o)
+MODEL_OBJ = $(BUILD_DIR)/TicTacToeModel.o
+VIEW_OBJ = $(BUILD_DIR)/TicTacToeView.o
+MAIN_OBJ = $(BUILD_DIR)/main.o
 
-# Цель по умолчанию
-all: build
+MODEL_TEST_OBJ = $(BUILD_DIR)/TestTicTacToeModel.o
+VIEW_TEST_OBJ = $(BUILD_DIR)/TestTicTacToeView.o
 
-# Цель сборки
-build: $(TARGET)
+EXEC = TicTacToe
+MODEL_TEST_EXEC = TestTicTacToeModel
+VIEW_TEST_EXEC = TestTicTacToeView
 
-# Правило для сборки исполняемого файла
-$(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJS)
+.PHONY: all clean test
 
-# Правило для сборки объектных файлов
-%.o: %.cpp
+all: $(EXEC)
+
+$(EXEC): $(MAIN_OBJ) $(MODEL_OBJ) $(VIEW_OBJ)
+	$(CXX) $(CXXFLAGS) -o $@ $^
+
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
+	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# Цель очистки
+$(MODEL_TEST_EXEC): $(MODEL_TEST_OBJ) $(MODEL_OBJ)
+	$(CXX) $(CXXFLAGS) -o $@ $^
+
+$(VIEW_TEST_EXEC): $(VIEW_TEST_OBJ) $(VIEW_OBJ)
+	$(CXX) $(CXXFLAGS) -o $@ $^
+
+$(BUILD_DIR)/%.o: $(TEST_DIR)/%.cpp
+	@mkdir -p $(@D)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+test: $(MODEL_TEST_EXEC) $(VIEW_TEST_EXEC)
+	./$(MODEL_TEST_EXEC)
+	./$(VIEW_TEST_EXEC)
+
 clean:
-	rm -f $(OBJS) $(TARGET)
+	rm -rf $(BUILD_DIR) $(EXEC) $(MODEL_TEST_EXEC) $(VIEW_TEST_EXEC)
